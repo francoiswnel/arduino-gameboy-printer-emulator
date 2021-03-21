@@ -75,7 +75,7 @@ function newCanvas()
     var container = document.createElement('div');
     var canvas = document.createElement('canvas');
     container.className = 'image-container';
-    canvas.width = 480;
+    canvas.width = 1280;
 
     var downloadButtonJPG = null;
     var downloadButton = document.createElement('button');
