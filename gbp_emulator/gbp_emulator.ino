@@ -25,7 +25,7 @@
  *
  */
 
-#define GBP_OUTPUT_RAW_PACKETS true // by default, packets are parsed. if enabled, output will change to raw data packets for parsing and decompressing later
+#define GBP_OUTPUT_RAW_PACKETS false // by default, packets are parsed. if enabled, output will change to raw data packets for parsing and decompressing later
 #define GBP_USE_PARSE_DECOMPRESSOR false // embedded decompressor can be enabled for use with parse mode but it requires fast hardware (SAMD21, SAMD51, ESP8266, ESP32)
 
 #include <stdint.h> // uint8_t
@@ -71,11 +71,11 @@
 // Pin Setup for Arduinos
 //                  | Arduino Pin | Gameboy Link Pin  |
 #define GBP_VCC_PIN               // Pin 1            : 5.0V (Unused)
-#define GBP_SO_PIN        4       // Pin 2            : Serial OUTPUT
-#define GBP_SI_PIN        3       // Pin 3            : Serial INPUT
+#define GBP_SO_PIN        3       // Pin 2            : Serial OUTPUT (FWN: Pins reversed on Arduino side because we're using the entire cable, which has a crossover.)
+#define GBP_SI_PIN        4       // Pin 3            : Serial INPUT (FWN: Pins reversed on Arduino side because we're using the entire cable, which has a crossover.)
 #define GBP_SD_PIN                // Pin 4            : Serial Data  (Unused)
 #define GBP_SC_PIN        2       // Pin 5            : Serial Clock (Interrupt)
-#define GBP_GND_PIN               // Pin 6            : GND (Attach to GND Pin)
+#define GBP_GND_PIN       6       // Pin 6            : GND (Attach to GND Pin) (FWN: Using a substitute ground pin to fit the Serial Boy.)
 #define LED_STATUS_PIN   13       // Internal LED blink on packet reception
 #endif
 
@@ -162,6 +162,10 @@ void setup(void)
   pinMode(GBP_SC_PIN, INPUT);
   pinMode(GBP_SO_PIN, INPUT);
   pinMode(GBP_SI_PIN, OUTPUT);
+
+  // FWN: Set the substitute ground pin for the Serial Boy. The microcontroller can sink enough current for this purpose.
+  pinMode(GBP_GND_PIN, OUTPUT);
+  digitalWrite(GBP_GND_PIN, 0);
 
   /* Default link serial out pin state */
   digitalWrite(GBP_SI_PIN, LOW);
